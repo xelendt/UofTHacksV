@@ -8,30 +8,41 @@ var geometry = new THREE.BoxGeometry( 1, 1, 1 );
 var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
 var cube = new THREE.Mesh( geometry, material );
 scene.add( cube );
+cube.matrixAutoUpdate  = false;
+cube.updateMatrix();
 
 camera.position.z = 5;
 
 // var t = 0;
 
-function getPosFromPi(){
-  xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      // document.getElementById("txtHint").innerHTML = this.responseText;
-      console.log(this.responseText);
-    }
-  };
-  xhttp.open("GET", "http://localhost:8081", true);
-  xhttp.send();
-}
-
 getPosFromPi();
+function getPosFromPi(){
+	xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			if (this.responseText) {
+				var parts = this.responseText.split("\n").reduce((acc,line) => {
+					return acc.concat(JSON.parse(line))
+				},[]);
+				var m = new Matrix4();
 
-function animate() {
-	requestAnimationFrame( animate );
-
-	cube.rotation.x += 0.1;
-	cube.rotation.y += 0.1;
-	renderer.render( scene, camera );
+				m.set( ...parts, 1, 1, 1, 1 );
+				cube.matrix.multiply(m);
+				cube.updateMatrix();
+			}
+			getPosFromPi();
+		}
+	};
+	xhttp.open("GET", "http://localhost:8081", true);
+	xhttp.send();
 }
-animate();
+
+
+// function animate() {
+// 	requestAnimationFrame( animate );
+
+// 	cube.rotation.x += 0.1;
+// 	cube.rotation.y += 0.1;
+// 	renderer.render( scene, camera );
+// }
+// animate();
