@@ -105,7 +105,7 @@ function getPosFromPi(){
 				// console.log(this.responseText);
 				try {
 					var parts = JSON.parse(this.responseText);
-				} catch e {
+				} catch (e) {
 					return getPosFromPi();
 				}
 				var m = new THREE.Matrix4();
@@ -121,9 +121,9 @@ function getPosFromPi(){
 				// cube.matrix.multiply(m);
 
 				//cube.rotation.y += 0.1;
-				cube.position.x = parts[3] / 100;
-				cube.position.y = parts[7] / 100;
-				cube.position.z = parts[11] / 100;
+				if( parts[3] != 0 ) { cube.position.x = parts[3] / 70; }
+				if( parts[7] != 0 ) { cube.position.y = parts[7] / 70; }
+				if( parts[11] != 0 ) { cube.position.z = parts[11] / 10; }
 
 				cube.rotation.x = 0;
 				cube.rotation.y = 0;
@@ -142,7 +142,7 @@ function getPosFromPi(){
 			getPosFromPi();
 		}
 	};
-	xhttp.open("GET", "http://localhost:8081", true);
+	xhttp.open("GET", "http://localhost:8080", true);
 	xhttp.send();
 }
 

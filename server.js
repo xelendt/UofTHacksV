@@ -15,7 +15,7 @@ proc.stdout.on("data", d => {
 	try {
 		var str = d.toString().trim().replace(/\]\[/g,",");
 		var parts = JSON.parse(str);
-	} catch e {
+	} catch (e) {
 		return;
 	}
 	if (parts.length === 12) {
@@ -36,7 +36,7 @@ proc.stderr.on("data",data => {
 })
 proc.on("exit",console.log)
 
-var port = process.env.PORT || 8081
+var port = process.env.PORT || 8080
 
 http.createServer((req,res) => {
 	res.setHeader("Access-Control-Allow-Origin", "*");
