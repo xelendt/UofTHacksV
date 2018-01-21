@@ -101,9 +101,13 @@ function getPosFromPi(){
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
 			if (this.responseText) {
-				console.log("Checking format:");
-				console.log(this.responseText);
-				var parts = JSON.parse(this.responseText.replace(/\]\[/g,","));
+				// console.log("Checking format:");
+				// console.log(this.responseText);
+				try {
+					var parts = JSON.parse(this.responseText);
+				} catch e {
+					return getPosFromPi();
+				}
 				var m = new THREE.Matrix4();
 
 				// parts[3] /= 10;

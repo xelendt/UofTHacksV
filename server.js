@@ -9,10 +9,18 @@ var newM = ""
 // var proc = spawn('ssh', ['-tt', 'pi@raspberrypi.local'])
 var proc = spawn('ssh', ['-tt', 'pi@raspberrypi.local', '-n', 'LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/lib /home/pi/uofthacks18/custom_tracking/tracker'])
 proc.stdout.on("data", d => {
-	if(d.toString().trim().length == 0){
+	if (d.toString().trim().length == 0) {
 		return;
 	}
-	data = d.toString().trim();
+	try {
+		var str = d.toString().trim().replace(/\]\[/g,",");
+		var parts = JSON.parse(str);
+	} catch e {
+		return;
+	}
+	if (parts.length === 12) {
+		data = str;
+	}
 	console.log(data);
 	console.log("- - -");
 	// var lines = data.split("\n");
